@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/special.css">
+</head>
+<body>
+<div class="special_top">
+    <a href="index.html">
+        <img src="images/back.jpg" alt="">
+    </a>
+    <span>专题列表</span>
+</div>
+<div class="special_content">
+    <!--<ul>-->
+    <!--<li>-->
+    <!--<a href="#">-->
+    <!--<img src="" alt="">-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--<span></span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+</div>
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/template-native.js"></script>
+<script>
+    var special_content=$(".special_content");
+    $.ajax({
+        type:"get",
+        dataType:"json",
+        url:"http://czdm.ittun.com/api/gettopics",
+        success:function(data){
+            var html=template("tp4",{array:data});
+            special_content.html(html);
+        }
+    })
+</script>
+<script id="tp4" type="text/html">
+    <%for(var i=0;i<array.length;i++) {%>
+        <div>
+            <img src="<%=array[i].img%>" alt="">
+            <span><%=array[i].title%></span>
+        </div>
+    <% }%>
+</script>
+</body>
+</html>

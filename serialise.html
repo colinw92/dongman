@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/serialise.css">
+</head>
+<body>
+    <div class="serialise_top">
+        <a href="index.html">
+            <img src="images/back.jpg" alt="">
+        </a>
+        <span>连载动漫</span>
+    </div>
+    <div class="serialise_content">
+        <!--<ul>-->
+            <!--<li>-->
+                <!--<a href="#">-->
+                    <!--<img src="" alt="">-->
+                    <!--<span></span>-->
+                    <!--<span></span>-->
+                    <!--<span></span>-->
+                    <!--<span></span>-->
+                <!--</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+    </div>
+    <script src="js/jquery-3.1.0.js"></script>
+    <script src="js/template-native.js"></script>
+    <script>
+        var serialise_content=$(".serialise_content");
+        $.ajax({
+            type:"get",
+            url:"http://czdm.ittun.com/api/getlianzai",
+//            url:"https://hltm-api.tomoya.cn/topics",
+            dataType:"json",
+            success:function(data){
+                var html=template("tp3",{array:data});
+                serialise_content.html(html);
+            }
+        })
+    </script>
+    <script id="tp3" type="text/html">
+        <ul>
+            <%for(var i=0;i<array.length;i++) {%>
+                    <li>
+                        <a href="<%=array[i].url%>">
+                            <img src="<%=array[i].img%>" alt="" class="left">
+                            <span class="color_black left"><%=array[i].name%></span>
+                            <span class="left"><%=array[i].episode%></span>
+                            <span class="left"><%=array[i].updateTime%></span>
+                            <span class="left">下载次数:<%=array[i].downloadCount%></span>
+                        </a>
+                    </li>
+            <% }%>
+        </ul>
+    </script>
+</body>
+</html>

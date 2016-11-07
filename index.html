@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div class="index_hl">
+        <div class="index_h1_zoom">
+            <img src="images/slide.jpg" alt="">
+            <ul>
+                <li><a href="serialise.html">连载动漫-get</a></li>
+                <li><a href="#">新闻列表-get</a></li>
+                <li><a href="special.html">专题列表-get</a></li>
+                <li><a href="#">关于</a></li>
+            </ul>
+            <div class="index_h1_right">
+
+            </div>
+        </div>
+        <div class="index_top">
+            <div class="index_top_left left">
+                <img src="images/top_left.png" alt="">
+            </div>
+            <span>红旅动漫</span>
+            <div class="index_top_right right">
+                <img src="images/top_right.png" alt="">
+            </div>
+        </div>
+        <div class="index_content">
+            <div class="index_banner">
+                <ul class="index_banner_ul clearfix"></ul>
+                <ul class="index_banner_icon">
+                    <li></li>
+                    <li class="liActive"></li>
+                </ul>
+            </div>
+            <div class="tab_title">
+                <span class="spanActive">新增连载</span>
+                <span>新增完结</span>
+                <span>推荐连载</span>
+                <span>推荐完结</span>
+            </div>
+            <div class="tab_content clearfix">
+                <!--<div>-->
+                <!--<a href="<%=array[k].url%>">-->
+                <!--<img src="<%=array[k].img%>">-->
+                <!--<span><%=array[k].update%></span>-->
+                <!--<span><%=array[k].name%></span>-->
+                <!--</a>-->
+                <!--</div>-->
+            </div>
+        </div>
+</div>
+
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/template-native.js"></script>
+<script>
+    $(function(){
+        //index_aniLeft js版本
+        var clickNum=1;
+        var left_more=document.getElementsByClassName("index_top_left")[0];
+        var index_hl=document.getElementsByClassName("index_hl")[0];
+        var index_hl_right=document.getElementsByClassName("index_h1_right")[0];
+        left_more.addEventListener("click",function(){
+            if(clickNum%2!==0){
+                index_hl.style.overflow="inherit";
+                index_hl.style.transform="translateX(300px)";
+                index_hl_right.style.display="block";
+
+            }else {
+                index_hl.style.transform="translateX(0px)";
+                index_hl_right.style.display="none";
+            }
+            clickNum++;
+        })
+        index_hl_right.addEventListener("click",function(){
+            index_hl.style.overflow="hidden";
+            index_hl_right.style.display="none";
+            index_hl.style.transform="translateX(0px)";
+        })
+        //index_content
+        $.getJSON("http://czdm.ittun.com/api/gethometab/4",null,function(data){
+            var firstInfor=template("tp2",{array:data});
+            tab_content.html(firstInfor);
+        })
+        var titles = $(".tab_title>span");
+        var tab_content = $(".tab_content");
+        var tarIndex=0;
+        for(var i=0;i<titles.length;i++){
+            titles.eq(i).on("click",function(){
+                tarIndex=$(this).index()+1;
+                for(var j=0;j<titles.length;j++){
+                    titles.eq(j).removeClass("spanActive");
+                }
+                $(this).addClass("spanActive");
+                $.ajax({
+                    type:"get",
+                    url:"http://czdm.ittun.com/api/gethometab/"+tarIndex,
+                    dataType:"json",
+                    success:function(data){
+                        var infor=template("tp2",{array:data});
+                        tab_content.html(infor);
+                    }
+                })
+            })
+        }
+        $.ajax({
+            type:"get",
+            url:"http://czdm.ittun.com/api/getlunbo",
+            dataType:"json",
+            success:function(data){
+                var html=template("tp1",{array:data});
+                $(".index_banner_ul").html(html);
+            }
+        })
+    })
+</script>
+<script id="tp1" type="text/html">
+    <% for(var i=0;i<array.length;i++) {%>
+    <li>
+        <img src="<%=array[i].img%>">
+        <span><%=array[i].title%></span>
+    </li>
+    <% }%>
+</script>
+<script id="tp2" type="text/html">
+    <% for(var k=0;k<array.length;k++) {%>
+    <div>
+        <a href="<%=array[k].url%>">
+            <img src="<%=array[k].img%>">
+            <span class="update"><%=array[k].update%></span>
+            <span class="name"><%=array[k].name%></span>
+        </a>
+    </div>
+    <% }%>
+</script>
+</body>
+</html>
